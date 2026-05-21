@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord File Splitter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="highlight">Discord</span> File Splitter</h1>
+            <p class="subtitle">Split, Upload, Download, Restore.</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('upload')">Upload</button>
+            <button class="tab-btn" onclick="openTab('download')">Download</button>
+        </div>
+
+        <div class="content">
+            <!-- Upload Section -->
+            <div id="upload" class="tab-content active">
+                <div class="card">
+                    <h2>Upload File</h2>
+                    <p class="description">Select a large file to split and upload to a new channel.</p>
+
+                    <div class="file-area">
+                        <button id="select-file-btn" class="primary-btn">Select File</button>
+                        <span id="selected-file-label">No file selected</span>
+                    </div>
+
+                    <button id="upload-btn" class="action-btn" disabled>Start Upload</button>
+                </div>
+            </div>
+
+            <!-- Download Section -->
+            <div id="download" class="tab-content">
+                <div class="card">
+                    <h2>Download & Restore</h2>
+                    <div class="scan-area">
+                        <button id="scan-btn" class="secondary-btn">Scan Channels</button>
+                    </div>
+
+                    <div class="list-container">
+                        <ul id="channel-list">
+                            <!-- Channels will appear here -->
+                            <li class="placeholder">Click 'Scan Channels' to see files...</li>
+                        </ul>
+                    </div>
+
+                    <div class="restore-area">
+                        <button id="select-folder-btn" class="primary-btn">Select Save Folder</button>
+                        <span id="selected-folder-label">No folder selected</span>
+                    </div>
+
+                    <button id="download-btn" class="action-btn" disabled>Download & Merge</button>
+                </div>
+            </div>
+
+            <!-- Logs Section -->
+            <div class="logs-card">
+                <h3>System Logs</h3>
+                <div id="log-console" class="log-console">
+                    <div class="log-entry">Waiting for actions...</div>
+                </div>
+            </div>
+
+            <!-- Speed Graph -->
+            <div class="card" style="margin-top: 20px;">
+                <h3>Transfer Speed</h3>
+                <canvas id="speedChart" width="400" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,258 @@
+:root {
+    --bg-color: #1a1b1e;
+    --card-bg: #2b2d31;
+    --primary: #5865f2;
+    --primary-hover: #4752c4;
+    --secondary: #4f545c;
+    --text-main: #ffffff;
+    --text-muted: #b9bbbe;
+    --success: #3ba55c;
+    --danger: #ed4245;
+    --font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 40px 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.highlight {
+    color: var(--primary);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.tab-btn:hover {
+    color: var(--text-main);
+}
+
+/* Content & Cards */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+.description {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.primary-btn, .secondary-btn, .action-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.primary-btn {
+    background: var(--secondary);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: #686d73;
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 1px solid var(--secondary);
+    color: var(--text-main);
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.action-btn {
+    display: block;
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    font-size: 1.1rem;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.action-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.file-area, .restore-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#selected-file-label, #selected-folder-label {
+    color: var(--text-muted);
+    font-style: italic;
+    word-break: break-all;
+}
+
+/* List */
+.list-container {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    height: 200px;
+    overflow-y: auto;
+    margin: 20px 0;
+    border: 1px solid var(--secondary);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+li:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+li.selected {
+    background: var(--primary);
+    color: white;
+}
+
+.placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Logs */
+.logs-card {
+    background: #202225;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #2f3136;
+}
+
+.logs-card h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.log-console {
+    height: 150px;
+    overflow-y: auto;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9rem;
+    color: #43b581;
+}
+
+.log-entry {
+    margin-bottom: 4px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #2b2d31; 
+}
+::-webkit-scrollbar-thumb {
+    background: #202225; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #18191c; 
+}
