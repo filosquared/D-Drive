@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  d-drive:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: d-drive
+    restart: unless-stopped
+    environment:
+      - FLASK_PORT=5000
+      - FLASK_DEBUG=false
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_SERVER_ID=${DISCORD_SERVER_ID}
+      - ENCRYPT_FILES=${ENCRYPT_FILES:-false}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data  # Persistent storage for downloads
+      - ./d_drive.db:/app/d_drive.db  # SQLite database for resume support
+    networks:
+      - d-drive-net
+
+networks:
+  d-drive-net:
+    driver: bridge
