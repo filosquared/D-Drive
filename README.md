@@ -1,127 +1,146 @@
-# D-Drive 💾🤖 (Discord Drive)
+# D-Drive
 
-D-Drive is a web-based and CLI application that allows you to use a private Discord server as a cloud storage drive. It bypasses Discord's file size limits by splitting large files into smaller parts, uploading them to dedicated text channels, and later downloading and reconstructing the original files seamlessly.
-
-Features a clean, modern **Flask-based web dashboard** with real-time transfer logs and a **live-updating speed tracking graph**!
+A **Discord bot + web UI** for splitting large files into chunks, uploading them to Discord, and merging them back into the original file. Supports **encryption, checksums, parallel uploads, and resume functionality**.
 
 ---
 
-## 🌟 Features
+## ✨ Features
 
-- **Split & Upload**: Splitted chunk uploads (default `10 MB` per chunk) to accommodate Discord's standard and boosted upload limits.
-- **Dynamic Channels**: Every uploaded file is given its own sanitized channel in a designated Discord server (Guild) so that files stay organized.
-- **Download & Merge**: Scan existing channels, select a destination folder, and download all chunks to rebuild your original file using memory-efficient streams.
-- **Real-Time Web Interface**:
-  - Live progress logs.
-  - Interactive speed tracking chart showing upload/download throughput.
-  - Native file and directory picker integrations.
-- **CLI Mode**: Use `file_splitter.py` directly from the terminal to split or merge files offline without starting the web application.
-
----
-
-## 🛠️ Tech Stack
-
-- **Backend**: Python 3.8+, Flask, `discord.py`, `python-dotenv`
-- **Frontend**: HTML5, Vanilla CSS (with modern dark-mode styling and glassmorphism elements), Vanilla JavaScript, Chart.js for data visualization
-- **Threading**: Asyncio-based Discord runner executing inside a daemon thread alongside Flask.
+- **File Splitting & Merging**: Split large files into smaller chunks and merge them back.
+- **SHA-256 Checksums**: Verify file integrity during upload and download.
+- **AES-256 Encryption**: Optional encryption for sensitive files (enabled via `.env`).
+- **Parallel Uploads**: Upload multiple chunks simultaneously to Discord for faster transfers.
+- **Resume Support**: Track upload progress in SQLite and resume interrupted transfers.
+- **Web UI**: User-friendly interface built with Flask.
+- **Discord Bot Integration**: Automatically upload chunks to a Discord channel.
+- **Docker Support**: Easy deployment with `Dockerfile` and `docker-compose.yml`.
+- **Unit Tests**: Test suite for `file_splitter.py`.
 
 ---
 
-## 🚀 Setup & Installation
+## 🚀 Quick Start
 
-### 1. Prerequisites
-- Python 3.8 or higher installed.
-- A Discord Bot Token and a dedicated Discord Server (Guild) where the bot has administrator permissions (needed to create channels, write messages, and upload attachments).
+### Option 1: Run Natively (Python)
 
-### 2. Clone and Initialize Repository
-If you haven't already, initialize a Git repository in the project folder:
-```bash
-git init
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/filosquared/D-Drive.git
+   cd D-Drive
+   ```
 
-### 3. Create a Virtual Environment & Install Dependencies
-Create a Python virtual environment to keep packages isolated and install dependencies:
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-**On macOS / Linux:**
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+3. **Set up `.env`**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your **Discord bot token**, **server ID**, and optional **encryption key**:
+   ```ini
+   DISCORD_TOKEN=your_bot_token_here
+   DISCORD_SERVER_ID=your_server_id_here
+   ENCRYPTION_KEY=your_optional_encryption_key
+   ```
 
-**On Windows:**
-```cmd
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 4. Configure Environment Variables
-Copy the `.env.example` file to `.env`:
-```bash
-cp .env.example .env
-```
-
-Open `.env` in your editor and configure the variables:
-```env
-DISCORD_TOKEN=your_bot_token_here
-DISCORD_SERVER_ID=your_server_id_here
-```
-
-> [!IMPORTANT]
-> - **DISCORD_TOKEN**: Obtained from the [Discord Developer Portal](https://discord.com/developers/applications) by creating an application, adding a Bot, and copying the token. Ensure the Bot has **Server Members Intent** and **Message Content Intent** enabled under the Bot tab.
-> - **DISCORD_SERVER_ID**: Right-click your server icon in Discord and select **Copy Server ID** (enable Developer Mode in Discord settings if you don't see this option).
+4. **Run the app**:
+   ```bash
+   python app.py
+   ```
+   Open the web UI at: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ---
 
-## 🖥️ Running the Application
+### Option 2: Run with Docker
 
-To start the Flask web application, run:
-```bash
-python app.py
-```
-By default, the server will start at `http://127.0.0.1:5000/`. Open this address in your web browser.
-
-### Using the Web GUI
-1. **Upload Tab**:
-   - Click **Select File** to open a native file dialog and select any file.
-   - Click **Start Upload**. The bot will split the file, create a new channel in your Discord server, and upload the parts.
-2. **Download Tab**:
-   - Click **Scan Channels** to list files stored in your server.
-   - Click **Select Save Folder** to choose where the restored file should be saved.
-   - Choose a channel/file from the scanned list and click **Download & Merge**.
+1. **Build and start the containers**:
+   ```bash
+   docker-compose up --build
+   ```
+   The app will be available at: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ---
 
-## 💻 CLI Usage (Offline File Splitter)
+## 📂 Project Structure
 
-You can also use the file splitter/merger directly from the command line without launching the web server.
-
-### Splitting a File
-Split a large file into `10 MB` chunks:
-```bash
-python file_splitter.py split /path/to/large_file.zip
 ```
-
-Customize chunk size (e.g., `25 MB` for boosted servers) and specify output directory:
-```bash
-python file_splitter.py split /path/to/large_file.zip --size 25 --output-dir ./parts
-```
-
-### Merging Chunks
-Merge parts back into the original file:
-```bash
-python file_splitter.py merge ./parts/large_file.zip.part* --output-dir ./restored
+D-Drive/
+├── app.py                 # Flask web UI and Discord bot
+├── backend_logic.py       # File splitting, merging, upload logic
+├── file_splitter.py       # Core file splitting/merging with checksums and encryption
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Docker image for the app
+├── docker-compose.yml     # Docker setup (app + Redis for rate limiting)
+├── .env.example           # Example environment variables
+├── tests/                 # Unit tests
+│   └── test_file_splitter.py
+└── README.md
 ```
 
 ---
 
-## 🔒 Security Notice
+## 🔧 Configuration
 
-Never commit your `.env` file containing your Discord Token to public repositories. The `.gitignore` file included in this repository is pre-configured to ignore `.env`, Python cache, and virtual environments.
+Edit `.env` to configure the bot:
+
+| Variable              | Description                                                                 | Required | Default       |
+|-----------------------|-----------------------------------------------------------------------------|----------|---------------|
+| `DISCORD_TOKEN`       | Your Discord bot token (from [Discord Developer Portal](https://discord.com/developers/applications)) | ✅ Yes  | -             |
+| `DISCORD_SERVER_ID`   | The ID of your Discord server/guild.                                       | ✅ Yes  | -             |
+| `ENCRYPTION_KEY`      | Optional key for AES-256 encryption. If not set, files are not encrypted.   | ❌ No   | -             |
+| `CHUNK_SIZE_MB`       | Size of each chunk in MB.                                                   | ❌ No   | `10`          |
+| `ENCRYPT_FILES`       | Enable/disable encryption (`true` or `false`).                              | ❌ No   | `false`       |
 
 ---
 
-## 📄 License
+## 🛠️ Usage
 
-This project is open-source and available under the [MIT License](LICENSE).
+### Web UI
+1. Open the web UI at [http://127.0.0.1:5000](http://127.0.0.1:5000).
+2. Upload a file.
+3. Select a Discord channel.
+4. Click **Upload** to split, encrypt (if enabled), and upload the file.
+
+### Discord Bot Commands
+| Command               | Description                                      |
+|-----------------------|--------------------------------------------------|
+| `/upload <file>`      | Upload and split a file to Discord.              |
+| `/status`             | Check the status of ongoing uploads.             |
+| `/resume`             | Resume interrupted uploads.                     |
+
+---
+
+## 🧪 Running Tests
+
+Run the unit tests for `file_splitter.py`:
+
+```bash
+python -m pytest tests/test_file_splitter.py -v
+```
+
+---
+
+## 📦 Dependencies
+
+- Python 3.8+
+- Flask
+- discord.py
+- cryptography (for encryption)
+- redis (for rate limiting in Docker)
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository.
+2. Create a branch: `git checkout -b feature/your-feature`.
+3. Commit your changes: `git commit -m "feat: add your feature"`.
+4. Push to the branch: `git push origin feature/your-feature`.
+5. Open a pull request.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
